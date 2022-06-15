@@ -413,6 +413,12 @@ there is truly no cleaner alternative to achieve the goal.
 
 ### Macro Naming
 
+- Unsafe macros (macros with side effects): All uppercase.
+- Constant values: All uppercase.
+- Function-like macros: All lowercase.
+- Macro as inline version of an already existing function: Same name as the
+function but uppercasing.
+
 ### Global Constants
 
 It is prefered to define global constants as const qualified varialbes (saddly
@@ -762,17 +768,46 @@ device registers.
 
 #### *typedef* Usage
 
+Typedef only in header files.
+
+Typedef usages:
+
+- Totally opaque objects (where the typedef is actively used to hide what the
+object is).
+- When you use sparse to literally create a new type for type-checking.
+- typedef struct defined in headers.
+
+Never typedef:
+
+- Pointer types.
+
+Regarding typedef struct definitions in header files, the typedef must have
+the same name as the struct:
+
+```C
+typedef struct Point2 { float x, y, z; } NotPoint2; // WRONG, typedef is not
+                                                    // the same as the struct name
+                                                    // ("Point2" != "NotPoint2")
+
+typedef struct Point { float x, y, z; } Point; // GOOD ("Point" == "Point")
+
+```
+
+Regarding the last item. This should be done only to struct types, never
+typedef pointers
+
 ## Doxygen
 
 ## Exceptions to the Rules
 
 ### Pre-existing Code
 
+If files of pre-existing code already follow some styling,
+use the styling of the pre-existing code while working in those files.
+
 ## To be Determined
 
 1. [Error Handling](#error-handling) (proposal: monadic error handling)
-1. [Macro Naming](#macro-naming) (proposal: freebsd kernel-like macro naming)
-1. [*typedef* usage](#typedef-usage)
 1. [Doxygen](#doxygen)
 1. [Exceptions to the Rules](#exceptions-to-the-rules)
 1. Naming conventions.
